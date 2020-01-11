@@ -1,0 +1,52 @@
+Sub StockMarketAnalysis():
+Dim sheet As Worksheet
+For Each sheet In Worksheets:
+  sheet.Range("I1").Value = "Ticker"
+  sheet.Range("L1").Value = "Total Stock Volume"
+  sheet.Range("J1").Value = "Yearly Change"
+  sheet.Range("k1").Value = "Percent Change"
+Dim Ticker As String
+Dim RowCounter As Long
+Dim LastRow As Long
+Dim TotalVol As Double
+Dim yearlyChange As Double
+Dim YearlyOpen As Double
+Dim YearlyClose As Double
+Dim x As Long
+x = 2
+TotalVol = 0
+RowCounter = 2
+LastRow = sheet.Cells(Rows.Count, 1).End(xlUp).Row
+For Row = 2 To LastRow
+TotalVol = TotalVol + sheet.Cells(Row, 7).Value
+If sheet.Cells(Row + 1, 1).Value <> sheet.Cells(Row, 1).Value Then
+   
+   sheet.Cells(RowCounter, 9) = sheet.Cells(Row, 1).Value
+   sheet.Cells(RowCounter, 12) = TotalVol
+   TotalVol = 0
+   YearlyOpen = sheet.Range("C" & x)
+   YearlyClose = sheet.Range("F" & Row)
+   yearlyChange = YearlyClose - YearlyOpen
+   sheet.Range("J" & RowCounter).Value = yearlyChange
+ If YearlyOpen = 0 Then
+    PercentChange = 0
+ Else
+   YearlyOpen = sheet.Range("C" & x)
+   PercentChange = yearlyChange / YearlyOpen
+   End If
+   sheet.Range("k" & RowCounter).NumberFormat = "0.00%"
+   sheet.Range("K" & RowCounter) = PercentChange
+If sheet.Range("J" & RowCounter).Value >= 0 Then
+sheet.Range("J" & RowCounter).Interior.ColorIndex = 4
+Else
+sheet.Range("J" & RowCounter).Interior.ColorIndex = 3
+End If
+   RowCounter = RowCounter + 1
+   x = Row + 1
+  End If
+ 
+ Next Row
+ 
+Next
+
+End Sub
